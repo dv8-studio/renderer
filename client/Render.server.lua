@@ -5,7 +5,6 @@ local Stats = ReplicatedStorage:WaitForChild("RenderStats")
 local AssignLine = ReplicatedStorage:WaitForChild("AssignLine")
 local SendDataE = ReplicatedStorage:WaitForChild("SendData")
 
--- Change to collection service mb
 local Part1 = Stats.Parts["1"].Value
 local Part2 = Stats.Parts["2"].Value
 local CenterCFrame = Part1.CFrame:Lerp(Part2.CFrame, .5)
