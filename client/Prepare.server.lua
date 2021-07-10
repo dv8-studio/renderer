@@ -44,7 +44,8 @@ end
 -- Delete invisible parts
 local MinInvisibleTransparency = RenderData.MinInvisibleTransparency or 0.9
 for _, v in ipairs(Workspace:GetDescendants()) do
-  if v:IsA 'BasePart' and v.Transparency > MinInvisibleTransparency and not table.find(RenderPartsTable, v) then v:Destroy() end
+  if v:IsA 'BasePart' and v.Transparency > MinInvisibleTransparency and not table.find(RenderPartsTable, v) then v:Destroy() continue end
+  if v:IsA 'UnionOperation' and not v.UsePartColor then v:Destroy() continue end
 end
 
 -- Use CollectionService to determine other elements which should be deleted
@@ -67,6 +68,14 @@ local RenderFolder = Instance.new("Folder", Workspace)
 RenderFolder.Name = "RenderFolder"
 
 for _, RenderObject in pairs(CollectionService:GetTagged("RenderObject")) do RenderObject.Parent = RenderFolder end
+
+-- Change meshes and unions collision fidelity
+for _, v in pairs(Workspace:GetDescendants()) do
+  if v:IsA 'MeshPart' or v:IsA 'UnionOperation' then
+    v.CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition
+    wait()
+  end
+end
 
 -- Set the parts and other properties
 local RenderStats = ReplicatedStorage:FindFirstChild("RenderStats")
@@ -93,3 +102,5 @@ if RenderData.OtherProperties then
     if object then object.Value = v end
   end
 end
+
+print("Finished preparing")
