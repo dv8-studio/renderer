@@ -30,6 +30,12 @@
         "$path": "Render.server.lua"
       }
     },
+    "HttpService": {
+      "$className": "HttpService",
+      "$properties": {
+        "HttpEnabled": true
+      }
+    },
     "ReplicatedStorage": {
       "$className": "ReplicatedStorage",
       "SendData": {
