@@ -65,7 +65,7 @@ for y = YPlots, -YPlots, -1 do
 		for A = 0, PxGrid - 1, LPA do
 			while #LC[A] == 0 do wait() end
 			if os.clock() - LastUpdate >= 10 then
-				print("LINES ", LinesDone, "/", Grid)
+				print("LINES ", LinesDone, "/", PxGrid)
 				LastUpdate = os.clock()
 			end
 			LinesDone += LPA
