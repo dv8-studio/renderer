@@ -7,7 +7,7 @@
     "run": "node ."
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
     "jimp": "^0.16.1"

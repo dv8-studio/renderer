@@ -1,0 +1,95 @@
+{
+  "name": "RoRender",
+  "tree": {
+    "$className": "DataModel",
+
+    "Workspace": {
+      "$className": "Workspace",
+      "$properties": {
+        "StreamingEnabled": false
+      }
+    },
+    "Players": {
+      "$className": "Players",
+      "$properties": {
+        "CharacterAutoLoads": false
+      }
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "RenderClient": {
+          "$path": "RenderClient.client.lua"
+        }
+      }
+    },
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "Render": {
+        "$path": "Render.server.lua"
+      }
+    },
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "SendData": {
+        "$className": "RemoteEvent"
+      },
+      "AssignLine": {
+        "$className": "RemoteEvent"
+      },
+      "RenderStats": {
+        "$className": "Folder",
+        "Parts": {
+          "$className": "Folder",
+          "1": { "$className": "ObjectValue" },
+          "2": { "$className": "ObjectValue" }
+        },
+        "Grid": {
+          "$className": "NumberValue",
+          "$properties": { "Value": 512 }
+        },
+        "Host": {
+          "$className": "StringValue",
+          "$properties": { "Value": "localhost:8081" }
+        },
+        "LinesPerAssign": {
+          "$className": "NumberValue",
+          "$properties": { "Value": 5 }
+        },
+        "PPS": {
+          "$className": "NumberValue",
+          "$properties": { "Value": 2 }
+        },
+        "RenderWater": {
+          "$className": "BoolValue",
+          "$properties": { "Value": true }
+        },
+        "ShadowsCone": {
+          "$className": "NumberValue",
+          "$properties": { "Value": 6 }
+        },
+        "ShadowsConeAngle": {
+          "$className": "NumberValue",
+          "$properties": { "Value": 10 }
+        },
+        "ShadowsLen": {
+          "$className": "NumberValue",
+          "$properties": { "Value": 300 }
+        },
+        "ShadowsTrans": {
+          "$className": "NumberValue",
+          "$properties": { "Value": 0.3 }
+        },
+        "SunPosition": {
+          "$className": "StringValue",
+          "$properties": { "Value": "Static" }
+        },
+        "SuperSampling": {
+          "$className": "BoolValue",
+          "$properties": { "Value": false }
+        }
+      }
+    }
+  }
+}
