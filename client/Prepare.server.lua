@@ -62,6 +62,12 @@ RecursiveDelete = function (Parent, Data)
 end
 RecursiveDelete(Workspace, othersPathDelete)
 
+-- Insert selected parts
+local RenderFolder = Instance.new("Folder", Workspace)
+RenderFolder.Name = "RenderFolder"
+
+for _, RenderObject in pairs(CollectionService:GetTagged("RenderObject")) do RenderObject.Parent = RenderFolder end
+
 -- Set the parts and other properties
 local RenderStats = ReplicatedStorage:FindFirstChild("RenderStats")
 if not RenderStats then
