@@ -113,9 +113,9 @@ local ColorToVector = function(Color, Material)
 	local Blender = Blenders[Material]
 	if Blender then
 		return Vector3.new(
-			Color.R * Blender[0] / 255,
-			Color.G * Blender[1] / 255,
-			Color.B * Blender[2] / 255
+			Color.R * Blender[1] / 255,
+			Color.G * Blender[2] / 255,
+			Color.B * Blender[3] / 255
 		)
 	end
 	return Vector3.new(Color.R * 255, Color.G * 255, Color.B * 255)
