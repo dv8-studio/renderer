@@ -34,7 +34,7 @@ local function Raycasting(Origin,Direction)
 	return nil, Origin + Direction, Default, Enum.Material.Air
 end
 
-local function GetColorFromMaterial(Material)
+local function GetColorFromMaterialTerrain(Material)
 	if (not RenderWater) and Material == Enum.Material.Water then return Default end
 	local Color
 	pcall(function()
@@ -93,6 +93,34 @@ local function DoSoftShadows(BaseColor,HitPos,NorA)
 	return BaseColor:Lerp(Default,Perc*0.3)
 end
 
+local Blenders = {
+	[Enum.Material.Cobblestone] = {214, 190, 165},
+	[Enum.Material.Concrete] = {222, 223, 222},
+	[Enum.Material.Brick] = {228, 227, 226},
+	[Enum.Material.Fabric] = {93, 90, 88},
+	[Enum.Material.DiamondPlate] = {216, 220, 216},
+	[Enum.Material.WoodPlanks] = {236, 231, 225},
+	[Enum.Material.Wood] = {230, 228, 230},
+	[Enum.Material.Slate] = {211, 212, 211},
+	[Enum.Material.Sand] = {228, 228, 228},
+	[Enum.Material.CorrodedMetal] = {156, 113, 82},
+	[Enum.Material.Marble] = {198, 199, 198},
+	[Enum.Material.Grass] = {219, 220, 217},
+	[Enum.Material.Granite] = {87, 89, 87}
+}
+
+local ColorToVector = function(Color, Material)
+	local Blender = Blenders[Material]
+	if Blender then
+		return Vector3.new(
+			Color.R * Blender[0] / 255,
+			Color.G * Blender[1] / 255,
+			Color.B * Blender[2] / 255
+		)
+	end
+	return Vector3.new(Color.R * 255, Color.G * 255, Color.B * 255)
+end
+
 AssignLine.OnClientEvent:Connect(function(Line, Lines, PlotCenter, FirstStud, RayLen)
 	print("Line", Line + 1)
 
@@ -116,14 +144,9 @@ AssignLine.OnClientEvent:Connect(function(Line, Lines, PlotCenter, FirstStud, Ra
 
 			if not SuperSample or Empty then
 				if (Part == Terrain) then
-					BaseColor1 = GetColorFromMaterial(Mat):Lerp(Default,math.clamp(SunNor,0,0.8))
+					BaseColor1 = GetColorFromMaterialTerrain(Mat):Lerp(Default,math.clamp(SunNor,0,0.8))
 				elseif ((Part) and (Part.Transparency < 1)) then
-					local Col = Part.Color
-					BaseColor1 = Vector3.new(
-						Col.R * 255,
-						Col.G * 255,
-						Col.B * 255
-					):Lerp(Default,math.clamp(SunNor,0,0.8))
+					BaseColor1 = ColorToVector(Part.Color, Part.Material):Lerp(Default,math.clamp(SunNor,0,0.8))
 				end
 				if ((BaseColor1 ~= Default) and (Part)) then
 					BaseColor1 = DoConeShadows(BaseColor1,Pos,Nor)
@@ -138,14 +161,9 @@ AssignLine.OnClientEvent:Connect(function(Line, Lines, PlotCenter, FirstStud, Ra
 				end
 
 				if (Part == Terrain) then
-					BaseColor1 = GetColorFromMaterial(Mat):Lerp(Default,math.clamp(SunNor,0,0.8))
+					BaseColor1 = GetColorFromMaterialTerrain(Mat):Lerp(Default,math.clamp(SunNor,0,0.8))
 				elseif ((Part) and (Part.Transparency < 1)) then
-					local Col = Part.Color
-					BaseColor1 = Vector3.new(
-						Col.R * 255,
-						Col.G * 255,
-						Col.B * 255
-					):Lerp(Default,math.clamp(SunNor,0,0.8))
+					BaseColor1 = ColorToVector(Part.Color, Part.Material):Lerp(Default,math.clamp(SunNor,0,0.8))
 				end
 				if ((BaseColor1 ~= Default) and (Part)) then
 					BaseColor1 = DoConeShadows(BaseColor1,Pos,Nor)
@@ -158,14 +176,9 @@ AssignLine.OnClientEvent:Connect(function(Line, Lines, PlotCenter, FirstStud, Ra
 				end
 
 				if (Part == Terrain) then
-					BaseColor2 = GetColorFromMaterial(Mat):Lerp(Default,math.clamp(SunNor,0,0.8))
+					BaseColor2 = GetColorFromMaterialTerrain(Mat):Lerp(Default,math.clamp(SunNor,0,0.8))
 				elseif ((Part) and (Part.Transparency < 1)) then
-					local Col = Part.Color
-					BaseColor2 = Vector3.new(
-						Col.R * 255,
-						Col.G * 255,
-						Col.B * 255
-					):Lerp(Default,math.clamp(SunNor,0,0.8))
+					BaseColor2 = ColorToVector(Part.Color, Part.Material):Lerp(Default,math.clamp(SunNor,0,0.8))
 				end
 				if ((BaseColor2 ~= Default) and (Part)) then
 					BaseColor2 = DoConeShadows(BaseColor2,Pos,Nor)
@@ -178,14 +191,9 @@ AssignLine.OnClientEvent:Connect(function(Line, Lines, PlotCenter, FirstStud, Ra
 				end
 
 				if (Part == Terrain) then
-					BaseColor3 = GetColorFromMaterial(Mat):Lerp(Default,math.clamp(SunNor,0,0.8))
+					BaseColor3 = GetColorFromMaterialTerrain(Mat):Lerp(Default,math.clamp(SunNor,0,0.8))
 				elseif ((Part) and (Part.Transparency < 1)) then
-					local Col = Part.Color
-					BaseColor3 = Vector3.new(
-						Col.R * 255,
-						Col.G * 255,
-						Col.B * 255
-					):Lerp(Default,math.clamp(SunNor,0,0.8))
+					BaseColor3 = ColorToVector(Part.Color, Part.Material):Lerp(Default,math.clamp(SunNor,0,0.8))
 				end
 				if ((BaseColor3 ~= Default) and (Part)) then
 					BaseColor3 = DoConeShadows(BaseColor3,Pos,Nor)
@@ -198,14 +206,9 @@ AssignLine.OnClientEvent:Connect(function(Line, Lines, PlotCenter, FirstStud, Ra
 				end
 
 				if (Part == Terrain) then
-					BaseColor4 = GetColorFromMaterial(Mat):Lerp(Default,math.clamp(SunNor,0,0.8))
+					BaseColor4 = GetColorFromMaterialTerrain(Mat):Lerp(Default,math.clamp(SunNor,0,0.8))
 				elseif ((Part) and (Part.Transparency < 1)) then
-					local Col = Part.Color
-					BaseColor4 = Vector3.new(
-						Col.R * 255,
-						Col.G * 255,
-						Col.B * 255
-					):Lerp(Default,math.clamp(SunNor,0,0.8))
+					BaseColor4 = ColorToVector(Part.Color, Part.Material):Lerp(Default,math.clamp(SunNor,0,0.8))
 				end
 				if ((BaseColor4 ~= Default) and (Part)) then
 					BaseColor4 = DoConeShadows(BaseColor4,Pos,Nor)
