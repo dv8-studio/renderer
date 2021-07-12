@@ -43,7 +43,7 @@ for y = YPlots, -YPlots, -1 do
 
 		SendData({
 			"RENDER_START";
-			PxGrid; PxGrid; AllPlots
+			PxGrid; PxGrid; i; AllPlots
 		})
 
 		local LC = {}
