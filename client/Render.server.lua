@@ -1,3 +1,5 @@
+local startAt = 1
+
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -30,6 +32,11 @@ local AllPlots = (XPlots*2+1) * (YPlots*2+1)
 local PxGrid = Grid * PPS
 for y = YPlots, -YPlots, -1 do
 	for x = -XPlots, XPlots do
+		if i < startAt then
+			i = i + 1
+			continue
+		end
+
 		print("Generating plot ", i, "/", AllPlots)
 		local PlotCFrame = CenterCFrame * CFrame.new(x * Grid, 0, -y * Grid) * CFrame.new(0, Size.Y / 2, 0)
 		local FirstRay = PlotCFrame * CFrame.new(-Grid/2, 0, -Grid/2) * CFrame.new(1/(PPS + 1), 0, 1/(PPS + 1))

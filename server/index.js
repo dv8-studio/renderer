@@ -31,7 +31,8 @@ const exportImg = (path) => new Promise((resolve, reject) => {
 
 app.post('/requests', express.json({ limit: '10mb' }), async (req, res) => {
   if (req.body[0] === 'RENDER_START') {
-    console.log('Started plot', ++plot, ' / ', req.body[3])
+    plot = req.body[3]
+    console.log('Started plot', plot, ' / ', req.body[4])
 
     y = 0
     xSize = req.body[1]
