@@ -121,8 +121,6 @@ local ColorToVector = function(Color, Material)
 	return Vector3.new(Color.R * 255, Color.G * 255, Color.B * 255)
 end
 
-print(ColorToVector(Color3.new(163/255,162/255,165/255), Enum.Material.Cobblestone))
-
 AssignLine.OnClientEvent:Connect(function(Line, Lines, PlotCenter, FirstStud, RayLen)
 	print("Line", Line + 1)
 
