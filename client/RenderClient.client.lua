@@ -26,9 +26,24 @@ local SunLen = Stats.ShadowsLen.Value
 
 local Default = Vector3.new(0,0,0)
 
-local Params = RaycastParams.new()
 local function Raycasting(Origin,Direction)
-	local Result = Workspace:Raycast(Origin, Direction, Params)
+	local Result, Completed, Ignore = nil, false, {}
+	repeat
+		local Params = RaycastParams.new()
+		Params.FilterType = Enum.RaycastFilterType.Blacklist
+		Params.FilterDescendantsInstances = Ignore
+		Params.IgnoreWater = false
+
+		Result = Workspace:Raycast(Origin, Direction, Params)
+		Completed = true
+
+		if Result then
+			if Result.Instance:IsA('BasePart') and Result.Instance.Transparency == 1 then
+				table.insert(Ignore, Result.Instance)
+				Completed = false
+			end
+		end
+	until Completed
 
 	if Result then return Result.Instance, Result.Position, Result.Normal, Result.Material end
 	return nil, Origin + Direction, Default, Enum.Material.Air
@@ -121,6 +136,23 @@ local ColorToVector = function(Color, Material)
 	return Vector3.new(Color.R * 255, Color.G * 255, Color.B * 255)
 end
 
+local DoubleCheckTerrain = function(Start, RayLen)
+	local Region = Region3.new(Vector3.new(Start.X, Start.Y - RayLen, Start.Z), Start):ExpandToGrid(4)
+	local Materials = Terrain:ReadVoxels(Region, 4)
+	local size = Materials.Size
+
+	for x = 1, size.X, 1 do
+		for y = 1, size.Y, 1 do
+			y = size.Y - y
+			for z = 1, size.Z, 1 do
+				if Materials[x][y] and Materials[x][y][z] ~= Enum.Material.Air then
+					return Materials[x][y][z]
+				end
+			end
+		end
+	end
+end
+
 AssignLine.OnClientEvent:Connect(function(Line, Lines, PlotCenter, FirstStud, RayLen)
 	print("Line", Line + 1)
 
@@ -137,7 +169,8 @@ AssignLine.OnClientEvent:Connect(function(Line, Lines, PlotCenter, FirstStud, Ra
 
 			local Start = (FirstStud * CFrame.new(B / PPS, 0, A / PPS)).Position
 
-			local Part,Pos,Nor,Mat = Raycasting(Start+Vector3.new(0.01, 0, 0.01), Vector3.new(0,-RayLen,0))
+			Start = Start + Vector3.new(0.01, 0, 0.01)
+			local Part,Pos,Nor,Mat = Raycasting(Start, Vector3.new(0,-RayLen,0))
 			local SunNor = (SunPosition.LookVector-Nor).Magnitude*0.4
 
 			local Empty = not Part
@@ -151,6 +184,15 @@ AssignLine.OnClientEvent:Connect(function(Line, Lines, PlotCenter, FirstStud, Ra
 				if ((BaseColor1 ~= Default) and (Part)) then
 					BaseColor1 = DoConeShadows(BaseColor1,Pos,Nor)
 				end
+
+				if not Part then
+					local TerrainCheck = DoubleCheckTerrain(Start, RayLen)
+					if TerrainCheck then
+						BaseColor1 = GetColorFromMaterialTerrain(TerrainCheck):Lerp(Default,math.clamp(SunNor,0,0.8))
+						Empty = false; Part = Terrain
+					end
+				end
+
 				BaseColor = BaseColor1
 			else -- SUPER SAMPLING X4
 
