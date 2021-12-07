@@ -142,8 +142,7 @@ local DoubleCheckTerrain = function(Start, RayLen)
 	local size = Materials.Size
 
 	for x = 1, size.X, 1 do
-		for y = 1, size.Y, 1 do
-			y = size.Y - y
+		for y = size.Y, 1, -1 do
 			for z = 1, size.Z, 1 do
 				if Materials[x][y] and Materials[x][y][z] ~= Enum.Material.Air then
 					return Materials[x][y][z]
