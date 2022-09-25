@@ -42,9 +42,9 @@ for y = YPlots, -YPlots, -1 do
 		local FirstRay = PlotCFrame * CFrame.new(-Grid/2, 0, -Grid/2) * CFrame.new(1/(PPS + 1), 0, 1/(PPS + 1))
 
 		SendData("start", {
-			plot: i,
-			imageSize: { x: PxGrid, y: PxGrid },
-			allPlots: allPlots
+			plot = i,
+			imageSize = { x = PxGrid, y = PxGrid },
+			allPlots = AllPlots
 		})
 
 		local LC = {}
