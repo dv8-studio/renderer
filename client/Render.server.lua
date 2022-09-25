@@ -25,7 +25,7 @@ local LPA = Stats.LinesPerAssign.Value
 local PPS = Stats.PPS.Value
 
 local HttpService = game:GetService("HttpService")
-local SendData = function(Data) return HttpService:PostAsync("http://" .. Stats.Host.Value .. "/requests", HttpService:JSONEncode(Data)) end
+local SendData = function(Path, Data) return HttpService:PostAsync("http://" .. Stats.Host.Value .. "/" .. Path, HttpService:JSONEncode(Data)) end
 
 local i = 1
 local AllPlots = (XPlots*2+1) * (YPlots*2+1)
@@ -41,9 +41,10 @@ for y = YPlots, -YPlots, -1 do
 		local PlotCFrame = CenterCFrame * CFrame.new(x * Grid, 0, -y * Grid) * CFrame.new(0, Size.Y / 2, 0)
 		local FirstRay = PlotCFrame * CFrame.new(-Grid/2, 0, -Grid/2) * CFrame.new(1/(PPS + 1), 0, 1/(PPS + 1))
 
-		SendData({
-			"RENDER_START";
-			PxGrid; PxGrid; i; AllPlots
+		SendData("start", {
+			plot: i,
+			imageSize: { x: PxGrid, y: PxGrid },
+			allPlots: allPlots
 		})
 
 		local LC = {}
@@ -77,7 +78,7 @@ for y = YPlots, -YPlots, -1 do
 			end
 			LinesDone += LPA
 
-			local TrySend = function() return pcall(function() SendData(LC[A]) end) end
+			local TrySend = function() return pcall(function() SendData("data", LC[A]) end) end
 			if not TrySend() then
 				local success
 				repeat wait(1) success = TrySend() until success
@@ -85,9 +86,7 @@ for y = YPlots, -YPlots, -1 do
 		end
 
 		SDEvent:Disconnect()
-		SendData({
-			"RENDER_END"
-		})
+		SendData("end", {})
 
 		i = i + 1
 	end
