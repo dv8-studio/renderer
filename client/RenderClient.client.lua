@@ -259,12 +259,10 @@ AssignLine.OnClientEvent:Connect(function(Line, Lines, PlotCenter, FirstStud, Ra
 				-- AVERAGE COLOURS FOR PIXELS
 				BaseColor = (BaseColor1+BaseColor2+BaseColor3+BaseColor4)*0.25
 			end
-			table.insert(Data,{
-				math.floor(BaseColor.X + 0.5),
-				math.floor(BaseColor.Y + 0.5),
-				math.floor(BaseColor.Z + 0.5),
-				Empty and 0 or 255
-			})
+			table.insert(Data, math.floor(BaseColor.X + 0.5))
+			table.insert(Data, math.floor(BaseColor.Y + 0.5))
+			table.insert(Data, math.floor(BaseColor.Z + 0.5))
+			table.insert(Data, Empty and 0 or 255)
 		end
 		RunService.Heartbeat:Wait()
 	end
