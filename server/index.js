@@ -1,57 +1,61 @@
-const express = require('express')
-const Jimp = require('jimp')
+const fastify = require('fastify')()
+const sharp = require('sharp')
 
 const port = 8081
 const exportPath = './out/'
 const extension = '.png'
 
-const app = express()
+let render = {
+  imageSize: { x: 0, y: 0 },
+  plot: 0,
+  nextIndex: 0,
+  pixels: 0
+}
 
-let imageData = []
-
-let xSize = 0
-let ySize = 0
-let plot = 0
-let y = 0
-
-const exportImg = (path) => new Promise((resolve, reject) => {
-  // eslint-disable-next-line no-new
-  new Jimp(xSize, ySize, function (err, image) {
-    if (err) reject(err)
-
-    imageData.forEach((data, i) => image.setPixelColor(data, Math.floor(i / xSize), i % xSize))
-
-    image.write(path, (err) => {
-      if (err) reject(err)
-      console.log('SAVED')
-      resolve()
-    })
+const exportImg = (path) => {
+  const image = sharp(render.data, {
+    raw: {
+      width: render.imageSize.x,
+      height: render.imageSize.y,
+      channels: 4
+    }
   })
+  image.toFile(path)
+}
+
+fastify.listen({ port }, (err, address) => {
+	if (err) {
+		console.error(err);
+		process.exit();
+	}
+	console.log(`Server is now listening on address: ${address}`);
 })
 
-app.post('/requests', express.json({ limit: '10mb' }), async (req, res) => {
-  if (req.body[0] === 'RENDER_START') {
-    plot = req.body[3]
-    console.log('Started plot', plot, ' / ', req.body[4])
+fastify.get("/", (request, reply) => reply.send("Running"))
 
-    y = 0
-    xSize = req.body[1]
-    ySize = req.body[2]
-    imageData = []
-    console.log('Starting render', xSize, ySize)
-  } else if (req.body[0] === 'RENDER_END') {
-    console.log('Render ended')
-
-    const fullExportPath = exportPath + plot + extension
-    console.log('Storing image in ' + fullExportPath)
-    await exportImg(fullExportPath)
-  } else {
-    console.log('GOT PACKETS', req.body.length, '(' + y + ' / ' + xSize * ySize + ')')
-    y += req.body.length
-    for (let i = 0; i < req.body.length; i++) imageData.push(Jimp.rgbaToInt(...req.body[i]))
-  }
-  res.send('.')
+fastify.post('/start', (request, reply) => {
+  render.plot = request.body.plot
+  render.nextIndex = 0
+  render.imageSize = request.body.imageSize
+  render.pixels = render.imageSize.x * render.imageSize.y
+  
+  console.log('Started plot', render.plot, ' / ', request.body.allPlots)
+  render.data = new Uint8Array()
+  console.log('Starting render', render.imageSize.x, render.imageSize.y)
+  reply.send('ok')
 })
-app.get('/requests', (req, res) => res.send('OK'))
 
-app.listen(port, 'localhost', () => { console.log(`Renderer is now listening on "http://localhost:${port}/requests".`) })
+fastify.post('/end', (request, reply) => {
+  console.log('Render ended')
+  
+  const fullExportPath = exportPath + render.plot + extension
+  console.log('Storing image in ' + fullExportPath)
+  exportImg(fullExportPath)
+  reply.send('ok')
+})
+
+fastify.post('/data', (request, reply) => {
+  for (let pixelComponent of request.body) render.data[render.nextIndex++] = pixelComponent
+  console.log('GOT PACKETS', req.body.length, '(' + ((render.nextIndex - 1) / 4) + ' / ' + render.pixels + ')')
+  reply.send('ok')
+})
