@@ -1,6 +1,6 @@
 # Renderer
 
-Project we use internally to quickly render tilted maps. Forked version of RoRenderV2 (https://devforum.roblox.com/t/minimap-render-rorenderv2/965827), heavily edited.
+Project we use internally to quickly render tilted maps. Forked version of RoRenderV3 (https://devforum.roblox.com/t/minimap-render-rorenderv3/965827), heavily edited.
 
 Ignoring character on client has been entirely removed therefore character spawning shall be disabled for the tool to work properly. Before starting with render you should also make sure no game script are run and all invisible parts are removed.
 
