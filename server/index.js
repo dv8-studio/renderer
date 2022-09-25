@@ -56,6 +56,6 @@ fastify.post('/end', (request, reply) => {
 
 fastify.post('/data', (request, reply) => {
   for (let pixelComponent of request.body) render.data[render.nextIndex++] = pixelComponent
-  console.log('GOT PACKETS', req.body.length, '(' + ((render.nextIndex - 1) / 4) + ' / ' + render.pixels + ')')
+  console.log('GOT PACKETS', request.body.length, '(' + ((render.nextIndex - 1) / 4) + ' / ' + render.pixels + ')')
   reply.send('ok')
 })
