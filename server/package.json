@@ -10,6 +10,6 @@
   "license": "MIT",
   "dependencies": {
     "fastify": "^4.6.0",
-    "sharp": "^0.31.0"
+    "jimp": "^0.16.2"
   }
 }
