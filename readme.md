@@ -11,6 +11,7 @@ This script does not use electron app. Instead it will listen for streamed data 
 # Usage
 
 1) Configuring map
+
 You should set rendered part of map by placing two parts (they may be rotated, but make sure they both have same rotation). Front on the parts will point the top of the render. The script will then calculate center CFrame by 
 ```lua
 Part1.CFrame:Lerp(Part2.CFrame, 0.5)
@@ -20,7 +21,9 @@ and determine how many plots it should render. Plot centered on that point will 
 As mentioned previously, you should also get rid of any invisible parts and scripts. Our internal script for that is included (`Prepare.server.lua`).
 
 2) Inject the Renderer
+
 Inject the Renderer to the game using rojo.
 
 3) Configuring server
+
 Enter the server folder and run `npm install` to install all nodejs dependencies. You may configure port, output directory and file extension in the `index.js` script. Use `npm run` to run the server script.
