@@ -40,7 +40,7 @@ fastify.post('/start', (request, reply) => {
   render.pixels = render.imageSize.x * render.imageSize.y
   
   console.log('Started plot', render.plot, ' / ', request.body.allPlots)
-  render.data = new Uint8Array()
+  render.data = new Uint8Array(render.pixels * 4)
   console.log('Starting render', render.imageSize.x, render.imageSize.y)
   reply.send('ok')
 })
